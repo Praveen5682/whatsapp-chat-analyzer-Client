@@ -4,9 +4,10 @@ import UserActivityChart from "../components/UserActivityChart";
 import ActiveUsersList from "../components/ActiveUsersList";
 import { useQuery } from "@tanstack/react-query";
 import getChatsData from "../services/chat/getChatsData";
+import noDataImg from "../assets/no-data.png";
 
 export default function Dashboard() {
-  const { data, isLoading, isError } = useQuery({
+  const { data } = useQuery({
     queryKey: ["chats"],
     queryFn: getChatsData,
   });
@@ -23,6 +24,12 @@ export default function Dashboard() {
 
       <FileUpload />
 
+      {chats.length === 0 && (
+        <div className="no-data">
+          <img src={noDataImg} alt="No data available" />
+          <p>No chat data available. Upload a WhatsApp chat to get started.</p>
+        </div>
+      )}
       {latestChat && (
         <div className="flex-chart">
           <UserActivityChart data={latestChat.graphData} />

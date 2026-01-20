@@ -1,14 +1,16 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import "../index.css";
 import chatUpload from "../services/chat/chatUpload";
 import toast from "react-hot-toast";
 
-export default function FileUpload({ setData }) {
+export default function FileUpload() {
+  const queryClient = useQueryClient();
+
   const uploadMutation = useMutation({
     mutationFn: chatUpload,
     onSuccess: (data) => {
       toast.success(data.message || "Chat uploaded successfully");
-      setData(data);
+      queryClient.invalidateQueries(["chats"]);
     },
     onError: (error) => {
       toast.error(error.message || "Failed to upload chat");
