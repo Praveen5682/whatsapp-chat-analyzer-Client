@@ -1,29 +1,18 @@
-import { useEffect, useState } from "react";
 import "../index.css";
 import FileUpload from "../components/FileUpload";
 import UserActivityChart from "../components/UserActivityChart";
 import ActiveUsersList from "../components/ActiveUsersList";
-
-const dummyData = {
-  graphData: [
-    { date: "Mon", activeUsers: 12, newUsers: 3 },
-    { date: "Tue", activeUsers: 18, newUsers: 2 },
-    { date: "Wed", activeUsers: 10, newUsers: 1 },
-    { date: "Thu", activeUsers: 22, newUsers: 4 },
-    { date: "Fri", activeUsers: 25, newUsers: 5 },
-    { date: "Sat", activeUsers: 8, newUsers: 0 },
-    { date: "Sun", activeUsers: 15, newUsers: 2 },
-  ],
-  active4DaysUsers: ["Praveen Kumar", "John Doe", "Anitha", "Rahul"],
-};
+import { useQuery } from "@tanstack/react-query";
+import getChatsData from "../services/chat/getChatsData";
 
 export default function Dashboard() {
-  const [data, setData] = useState(null);
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["chats"],
+    queryFn: getChatsData,
+  });
 
-  // Load dummy data on page load
-  useEffect(() => {
-    setData(dummyData);
-  }, []);
+  const chats = data?.data || [];
+  const latestChat = chats[0];
 
   return (
     <div className="container">
@@ -32,17 +21,15 @@ export default function Dashboard() {
         Upload a WhatsApp group chat export to analyze last 7 days activity
       </p>
 
-      <FileUpload setData={setData} />
+      <FileUpload />
 
-      {data && (
+      {latestChat && (
         <div className="flex-chart">
-          {/* Chart */}
-          <UserActivityChart data={data.graphData} />
+          <UserActivityChart data={latestChat.graphData} />
 
-          {/* Active users */}
           <div className="card">
             <h2 className="card-title">Users Active for 4+ Days</h2>
-            <ActiveUsersList users={data.active4DaysUsers} />
+            <ActiveUsersList users={latestChat.active4DaysUsers} />
           </div>
         </div>
       )}

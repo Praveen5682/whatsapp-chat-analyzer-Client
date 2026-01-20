@@ -9,7 +9,7 @@ import {
 } from "recharts";
 
 const UserActivityChart = ({ data }) => {
-  if (!data || data.length === 0) {
+  if (!data) {
     return <p className="empty-text">No data available</p>;
   }
 

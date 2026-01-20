@@ -28,10 +28,6 @@ export default function FileUpload({ setData }) {
         Upload WhatsApp Chat (.txt)
         <input type="file" accept=".txt" onChange={handleUpload} hidden />
       </label>
-
-      {uploadMutation.isLoading && <p>Uploading...</p>}
-      {uploadMutation.isError && <p style={{ color: "red" }}>Upload failed!</p>}
-      {uploadMutation.isSuccess && <p>Upload successful!</p>}
     </div>
   );
 }
